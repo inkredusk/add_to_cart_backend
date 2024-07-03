@@ -45,7 +45,7 @@ public final class Constants {
 	public static final String GET_PRODUCT_BY_ID_ENDED = "getProductById method ended for productId: {}";
 	
 	public static final String CONTROLLER_CREATE_PRODUCT_STARTED = "createProduct method started for product: {}";
-    public static final String CONTROLLER_PRODUCT_CREATED_SUCCESSFULLY = "Product created successfully: {}";
+    public static final String CONTROLLER_PRODUCT_CREATED_SUCCESSFULLY = "Product created successfully!!";
     public static final String CONTROLLER_FAILED_TO_ADD_ITEM = "Failed to add item";
     public static final String CONTROLLER_GET_ALL_PRODUCTS_STARTED = "getAllProducts method started";
     public static final String CONTROLLER_RETRIEVED_PRODUCTS = "Retrieved {} products";

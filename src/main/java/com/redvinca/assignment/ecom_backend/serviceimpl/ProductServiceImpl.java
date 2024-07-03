@@ -80,27 +80,28 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public List<Product> getAllProducts() {
-		logger.info(Constants.GET_ALL_PRODUCTS_STARTED);
+	    logger.info(Constants.GET_ALL_PRODUCTS_STARTED);
 
-		List<Product> products = productRepository.findAll();
-		products.forEach(product -> product.setImages(imageRepository.findByProduct(product)));
-		logger.info(Constants.GET_ALL_PRODUCTS_ENDED, products.size());
-		return products;
+	    List<Product> products = productRepository.findAll();
+	    products.forEach(product -> product.setImages(imageRepository.findByProduct(product)));
+	    logger.info(Constants.GET_ALL_PRODUCTS_ENDED, products.size());
+	    return products;
 	}
 
 	@Override
 	public Product getProductById(Long id) {
-		logger.info(Constants.GET_PRODUCT_BY_ID_STARTED, id);
+	    logger.info(Constants.GET_PRODUCT_BY_ID_STARTED, id);
 
-		Product product = productRepository.findById(id).orElse(null);
-		if (product != null) {
-			product.setImages(imageRepository.findByProduct(product));
-			logger.info(Constants.PRODUCT_FOUND, id);
-		} else {
-			logger.error(Constants.PRODUCT_NOT_FOUND);
-			throw new ProductNotFoundException("Product not found with id: " + id);
-		}
-		logger.info(Constants.GET_PRODUCT_BY_ID_ENDED, id);
-		return product;
+	    Product product = productRepository.findById(id).orElse(null);
+	    if (product != null) {
+	        product.setImages(imageRepository.findByProduct(product));
+	        logger.info(Constants.PRODUCT_FOUND, id);
+	    } else {
+	        logger.error(Constants.PRODUCT_NOT_FOUND);
+	        throw new ProductNotFoundException("Product not found with id: " + id);
+	    }
+	    logger.info(Constants.GET_PRODUCT_BY_ID_ENDED, id);
+	    return product;
 	}
+
 }

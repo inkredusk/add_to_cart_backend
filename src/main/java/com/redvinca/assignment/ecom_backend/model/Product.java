@@ -16,20 +16,20 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Table
 public class Product {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(nullable = false)
-	private String name;
+    @Column(nullable = false)
+    private String name;
 
-	@Column(nullable = false)
-	private double price;
+    @Column(nullable = false)
+    private double price;
 
-	@Column(nullable = false)
-	private Long stock;
+    @Column(nullable = false)
+    private Long stock;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonManagedReference
-	private List<Image> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Image> images;
 }

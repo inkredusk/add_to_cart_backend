@@ -36,7 +36,7 @@ public class ProductController {
         try {
             Product createdProduct = iProductService.createProduct(product, file);
             logger.info(Constants.CONTROLLER_PRODUCT_CREATED_SUCCESSFULLY, createdProduct.getName());
-            return ResponseEntity.ok(createdProduct);
+            return ResponseEntity.ok(Constants.CONTROLLER_PRODUCT_CREATED_SUCCESSFULLY);
         } catch (Exception e) {
             logger.error(Constants.PRODUCT_DETAILS_INVALID, e);
             return ResponseEntity.status(500).body(Constants.PRODUCT_DETAILS_INVALID);
