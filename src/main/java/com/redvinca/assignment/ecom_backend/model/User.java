@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="user")
+@Table(name = "user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,31 +26,34 @@ public class User {
 
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
+	
+	@Column(name = "gender", nullable = false)
+	private String gender;
 
 	@Column(name = "user_address", nullable = false)
 	private String address;
-	
+
 	@Column(name = "country", nullable = false)
 	private String countryName;
-	
+
 	@Column(name = "city", nullable = false)
 	private String cityName;
-	
+
 	@Column(name = "state", nullable = false)
 	private String stateName;
-	
+
 	@Column(name = "pincode", nullable = false)
 	private String pincode;
 
 	@Column(name = "email", nullable = false)
 	private String email;
-	
+
 	@Column(name = "mobile_number", nullable = false)
 	private String mobileNumber;
 
 	@Column(name = "user_password", nullable = false)
 	private String password;
-	
+
 	@Column(name = "conform_password", nullable = false)
 	private String conformPassword;
 
