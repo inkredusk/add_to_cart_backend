@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.redvinca.assignment.ecom_backend.model.User;
 import com.redvinca.assignment.ecom_backend.repository.UserRepository;
+import com.redvinca.assignment.ecom_backend.request.ChangePasswordRequest;
 import com.redvinca.assignment.ecom_backend.request.LoginRequest;
 import com.redvinca.assignment.ecom_backend.request.RegisterRequest;
 import com.redvinca.assignment.ecom_backend.response.LoginRegisterResponse;
 import com.redvinca.assignment.ecom_backend.service.UserService;
 import com.redvinca.assignment.ecom_backend.util.AESUtils;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,76 +26,140 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public LoginRegisterResponse registerUser(RegisterRequest registerRequest) {
-	    LoginRegisterResponse response = new LoginRegisterResponse();
-	    
-	    try {
-	        // Check if user with the same email already exists
-	        if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
-	            response.setMessage("This email is already registered...!.");
-	            return response;
-	        }
-	        User user = new User();
-	        user.setFirstName(registerRequest.getFirstName());
-	        user.setLastName(registerRequest.getLastName());
-	        user.setAddress(registerRequest.getAddress());
-	        user.setCountryName(registerRequest.getCountry()); // Adjust this line if the country is dynamic or passed in the request
-	        user.setCityName(registerRequest.getCity());
-	        user.setStateName(registerRequest.getState());
-	        user.setPincode(registerRequest.getPincode());
-	        user.setEmail(registerRequest.getEmail());
-	        user.setMobileNumber(registerRequest.getMobileNumber());
-	        
-	        // Encrypt password
-	        SecretKey secretKey = AESUtils.getStoredKey();
-	        log.info(" SecretKey--at registation :-"+secretKey);
-	        String encryptedPassword = AESUtils.encrypt(registerRequest.getPassword(), secretKey);
-	        user.setPassword(encryptedPassword);
-	        user.setConformPassword(registerRequest.getConformPassword()); // Consider whether you need to store this
+		LoginRegisterResponse response = new LoginRegisterResponse();
 
-	        userRepository.save(user);
-	        response.setMessage("User registered successfully..!");
-	    } catch (Exception e) {
-	        response.setMessage("Error registering user");
-	    }
-	    return response;
+		try {
+			// Check if user with the same email already exists
+			if (userRepository.findByEmail(registerRequest.getEmail()) != null) {
+				response.setMessage("This email is already registered...!.");
+				return response;
+			}
+			User user = new User();
+			user.setFirstName(registerRequest.getFirstName());
+			user.setLastName(registerRequest.getLastName());
+			user.setGender(registerRequest.getGender());
+			user.setAddress(registerRequest.getAddress());
+			user.setCountryName(registerRequest.getCountry()); // Adjust this line if the country is dynamic or passed
+																// in the request
+			user.setCityName(registerRequest.getCity());
+
+			user.setStateName(registerRequest.getState());
+			user.setPincode(registerRequest.getPincode());
+			user.setEmail(registerRequest.getEmail());
+			user.setMobileNumber(registerRequest.getMobileNumber());
+
+			// Encrypt password
+			SecretKey secretKey = AESUtils.getStoredKey();
+			log.info(" SecretKey--at registation :-" + secretKey);
+			String encryptedPassword = AESUtils.encrypt(registerRequest.getPassword(), secretKey);
+			user.setPassword(encryptedPassword);
+			user.setConformPassword(registerRequest.getConformPassword()); // Consider whether you need to store this
+
+			userRepository.save(user);
+			response.setMessage("User registered successfully..!");
+		} catch (Exception e) {
+			response.setMessage("Error registering user");
+		}
+		return response;
 	}
 
 	@Override
 	public LoginRegisterResponse loginUser(LoginRequest loginRequest) {
-	    // Fetch the user using the email from the loginRequest
-	    User user = userRepository.findByEmail(loginRequest.getEmail());
-	    System.out.println("--user--" + user);
+		// Fetch the user using the email from the loginRequest
+		User user = userRepository.findByEmail(loginRequest.getEmail());
+		System.out.println("--user--" + user);
 
-	    // Create a response object
-	    LoginRegisterResponse response = new LoginRegisterResponse();
+		// Create a response object
+		LoginRegisterResponse response = new LoginRegisterResponse();
 
-	    // Check if the user exists
-	    if (user == null) {
-	        response.setMessage("Invalid username/password");
-	        return response;
-	    }
+		// Check if the user exists
+		if (user == null) {
+			response.setMessage("Invalid username/password");
+			return response;
+		}
 
-	    try {
-	        // Retrieve the stored secret key
-	        SecretKey secretKey = AESUtils.getStoredKey();
-	        log.info("Check SecretKey--at registation :-"+secretKey);
+		try {
+			// Retrieve the stored secret key
+			SecretKey secretKey = AESUtils.getStoredKey();
+			log.info("Check SecretKey--at registation :-" + secretKey);
 
-	        // Decrypt the stored password
-	        String decryptedPassword = AESUtils.decrypt(user.getPassword(), secretKey);
-	        log.info("Check DecryptedPassword--at Login :-"+decryptedPassword);
-	      
+			// Decrypt the stored password
+			String decryptedPassword = AESUtils.decrypt(user.getPassword(), secretKey);
+			log.info("Check DecryptedPassword--at Login :-" + decryptedPassword);
 
-	        // Validate the password
-	        if (decryptedPassword.equals(loginRequest.getPassword())) {
-	            response.setMessage("Login successful!");
-	        } else {
-	            response.setMessage("Invalid username/password");
-	        }
-	    } catch (Exception e) {
-	        response.setMessage("Error logging in");
-	    }
+			// Validate the password
+			if (decryptedPassword.equals(loginRequest.getPassword())) {
+				response.setMessage("Login successful!");
+			} else {
+				response.setMessage("Invalid username/password");
+			}
+		} catch (Exception e) {
+			response.setMessage("Error logging in");
+		}
 
-	    return response;
+		return response;
 	}
 
+	@Override
+	public LoginRegisterResponse logoutUser(HttpSession session) {
+		LoginRegisterResponse response = new LoginRegisterResponse();
+		try {
+			session.invalidate();
+			response.setMessage("User logged out successfully!");
+		} catch (Exception e) {
+			response.setMessage("Error logging out user");
+		}
+		return response;
+	}
+	@Override
+	public LoginRegisterResponse changePassword(ChangePasswordRequest request) {
+		// Retrieve the user from the repository using the email provided in the request
+		User user = userRepository.findByEmail(request.getEmail());
+		LoginRegisterResponse response = new LoginRegisterResponse();
+	
+		// Check if the user is found
+		if (user == null) {
+			response.setMessage("User not found.");
+			return response;
+		}
+	
+		try {
+			// Retrieve the stored secret key for encryption/decryption
+			SecretKey secretKey = AESUtils.getStoredKey();
+	
+			// Decrypt the user's current password
+			String decryptedPassword = AESUtils.decrypt(user.getPassword(), secretKey);
+	
+			// Check if the current password provided in the request matches the decrypted password
+			if (!decryptedPassword.equals(request.getCurrentPassword())) {
+				response.setMessage("Current password is incorrect.");
+				return response;
+			}
+	
+			// Check if the new password is different from the current password
+			if (decryptedPassword.equals(request.getNewPassword())) {
+				response.setMessage("New password cannot be the same as the current password.");
+				return response;
+			}
+	
+			// Encrypt the new password
+			String newEncryptedPassword = AESUtils.encrypt(request.getNewPassword(), secretKey);
+			
+			// Update the user's password with the new encrypted password
+			user.setPassword(newEncryptedPassword);
+			
+			// Save the updated user entity back to the repository
+			userRepository.save(user);
+	
+			// Set the success message in the response
+			response.setMessage("Password changed successfully.");
+		} catch (Exception e) {
+			// In case of an exception, set the error message in the response
+			response.setMessage("Error changing password.");
+		}
+	
+		// Return the response
+		return response;
+	}
+	
 }
