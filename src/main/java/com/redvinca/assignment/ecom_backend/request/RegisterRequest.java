@@ -20,18 +20,15 @@ public class RegisterRequest {
 	@NotBlank(message = "Last name is required")
 	private String lastName;
 
-	@NotBlank(message = "Flat, House no., Appartment, Building is required")
-	private String addressLine1;
+	@NotBlank(message = "Address is required")
+	private String address;
 
-	@NotBlank(message = "Area, Streat,Sector, Village is required")
-	private String addressLine2;
-	
 	@NotBlank(message = "City is required")
 	private String city;
 
-//	@NotNull(message = "Pincode is required")
-//	@Pattern(regexp = "^[0-9]{6}$", message = "Pincode must be a 6-digit number")
-//	private String pincode;
+	@NotNull(message = "Pincode is required")
+	@Pattern(regexp = "^[0-9]{6}$", message = "Pincode must be a 6-digit number")
+	private String pincode;
 
 	@NotBlank(message = "Mobile number is required")
 	@Pattern(regexp = "^[0-9]{10}$", message = "Mobile number must be a 10-digit number")
@@ -46,5 +43,5 @@ public class RegisterRequest {
 	private String password;
 
 	@NotBlank(message = "Confirm password is required")
-	private String conformPassword;
+	private String confirmPassword;
 }
