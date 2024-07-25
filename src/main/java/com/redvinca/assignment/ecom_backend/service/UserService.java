@@ -14,7 +14,7 @@ public interface UserService {
     
 	LoginRegisterResponse loginUser(LoginRequest loginRequest);
 	
-	public LoginRegisterResponse  confirmEmail(String confirmationToken);
+	//public LoginRegisterResponse  confirmEmail(String confirmationToken);
 	
 	public LoginRegisterResponse logoutUser(HttpSession session);
 
