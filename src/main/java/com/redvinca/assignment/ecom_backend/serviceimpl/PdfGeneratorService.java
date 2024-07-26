@@ -25,7 +25,7 @@ public class PdfGeneratorService {
     private CartServiceImpl cartService; // Assuming this is your CartService implementation -------------------------------------
 
     
-    public byte[] generatePdf() throws IOException {
+    public byte[] generatePdf(List<Cart> selectedItems) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document document = new Document();
         try {          
@@ -75,13 +75,12 @@ public class PdfGeneratorService {
 
           
             // Fetch cart details and populate table rows -------------------------------------------------------------------------
-            List<Cart> cartDetails = cartService.getAllCartItems();
-            for (Cart cartItem : cartDetails) {
-                cell.setPhrase(new Paragraph(cartItem.getProduct().getName()));
+            for (Cart item : selectedItems) {
+            	cell.setPhrase(new Paragraph(item.getProduct().getName()));
                 table.addCell(cell);
-                cell.setPhrase(new Paragraph(String.valueOf(cartItem.getQuantity())));
+                cell.setPhrase(new Paragraph(String.valueOf(item.getQuantity())));
                 table.addCell(cell);
-                cell.setPhrase(new Paragraph(String.valueOf(cartItem.getProduct().getPrice())));
+                cell.setPhrase(new Paragraph("₹" + item.getProduct().getPrice()));
                 table.addCell(cell);
             }
             cell.setPhrase(new Paragraph("total"));
@@ -110,3 +109,6 @@ public class PdfGeneratorService {
         return baos.toByteArray();
     }
 }
+
+
+
