@@ -30,4 +30,8 @@ public interface ICartService {
 
 	// Updates the quantity of a cart item based on a quantity change request.
 	public MessageResponse updateQuantityIncreaseDecrease(UpdateQuantityRequest request);
+
+	void clearSelectedItems(List<Long> cartItemIds);
+	
+	
 }

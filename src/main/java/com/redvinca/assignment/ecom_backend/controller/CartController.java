@@ -132,4 +132,17 @@ public class CartController {
 		logger.info(Constants.CONTROLLER_DELETE_ITEM_FROM_CART_ENDED, cartRequest.getCartId());
 		return response;
 	}
+	
+	@PostMapping("/clearSelectedItems")
+	public ResponseEntity<String> clearSelectedItems(@RequestBody List<Long> cartItemIds) {
+	    try {
+	        cartServiceImpl.clearSelectedItems(cartItemIds);
+	        return ResponseEntity.ok("Selected cart items cleared successfully.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Failed to clear selected cart items.");
+	    }
+	}
+
+
 }

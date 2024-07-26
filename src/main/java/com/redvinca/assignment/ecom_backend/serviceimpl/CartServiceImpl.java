@@ -201,4 +201,12 @@ public class CartServiceImpl implements ICartService {
 		logger.info(Constants.UPDATE_QUANTITY_ENDED, request.getCartItemId());
 		return response;
 	}
+	
+	@Override
+	public void clearSelectedItems(List<Long> cartItemIds) {
+	    for (Long cartItemId : cartItemIds) {
+	        cartRepository.deleteById(cartItemId);
+	    }
+	}
+
 }
