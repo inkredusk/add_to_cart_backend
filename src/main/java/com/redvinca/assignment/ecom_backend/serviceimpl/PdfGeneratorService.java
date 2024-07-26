@@ -74,6 +74,8 @@ public class PdfGeneratorService {
             table.addCell(cell);
 
           
+            long totalQuantity = 0;
+            long totalprice = 0;
             // Fetch cart details and populate table rows -------------------------------------------------------------------------
             for (Cart item : selectedItems) {
             	cell.setPhrase(new Paragraph(item.getProduct().getName()));
@@ -82,12 +84,15 @@ public class PdfGeneratorService {
                 table.addCell(cell);
                 cell.setPhrase(new Paragraph("₹" + item.getProduct().getPrice()));
                 table.addCell(cell);
+                totalQuantity += item.getQuantity();
+                totalprice += item.getProduct().getPrice();
+ 
             }
             cell.setPhrase(new Paragraph("total"));
             table.addCell(cell);
-            cell.setPhrase(new Paragraph(String.valueOf(cartService.getTotalQuantity())));
+            cell.setPhrase(new Paragraph(String.valueOf(totalQuantity)));
             table.addCell(cell);
-            cell.setPhrase(new Paragraph(String.valueOf(cartService.getTotalPrice())));
+            cell.setPhrase(new Paragraph(String.valueOf(totalprice)));
             table.addCell(cell);
             
 
